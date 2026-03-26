@@ -1,0 +1,5 @@
+{
+  "name": "Remix: Nano Banana 2 Image Generator",
+  "description": "Generate high-quality images using Gemini 3.1 Flash Image Preview with a daily credit refresh system.",
+  "requestFramePermissions": []
+}
