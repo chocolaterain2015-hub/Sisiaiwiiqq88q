@@ -1,10 +1,10 @@
 import OpenAI from 'openai';
 
 // Initialize Grok / xAI client
-export const getGrokClient = () => {
-  const apiKey = import.meta.env.VITE_XAI_API_KEY || process.env.VITE_XAI_API_KEY;
+export const getGeminiClient = () => {   // kept the same name so UI doesn't break
+  const apiKey = import.meta.env.VITE_XAI_API_KEY || process.env.VITE_XAI_API_KEY || process.env.API_KEY;
   if (!apiKey) {
-    throw new Error("XAI_API_KEY not found. Please add it to your environment variables.");
+    throw new Error("XAI_API_KEY not found. Please add VITE_XAI_API_KEY to your environment variables.");
   }
   return new OpenAI({
     apiKey,
@@ -13,7 +13,6 @@ export const getGrokClient = () => {
   });
 };
 
-// Helper to pick the right chat model
 const getChatModel = (mode: 'fast' | 'normal' | 'multi-agent' = 'normal') => {
   if (mode === 'fast') return 'grok-4-1-fast-reasoning';
   if (mode === 'multi-agent') return 'grok-4.20-multi-agent-0309';
@@ -21,7 +20,7 @@ const getChatModel = (mode: 'fast' | 'normal' | 'multi-agent' = 'normal') => {
 };
 
 export const enhancePrompt = async (prompt: string) => {
-  const client = getGrokClient();
+  const client = getGeminiClient();
   const response = await client.chat.completions.create({
     model: getChatModel('normal'),
     messages: [
@@ -44,7 +43,7 @@ export const generateImage = async (
   seed: number | undefined = undefined,
   size: "1K" | "2K" | "4K" = "1K"
 ) => {
-  const client = getGrokClient();
+  const client = getGeminiClient();
 
   let finalPrompt = prompt;
 
@@ -79,7 +78,7 @@ export const generateImage = async (
 };
 
 export const suggestRefinedPrompt = async (originalPrompt: string) => {
-  const client = getGrokClient();
+  const client = getGeminiClient();
   const response = await client.chat.completions.create({
     model: getChatModel('normal'),
     messages: [
@@ -92,7 +91,7 @@ export const suggestRefinedPrompt = async (originalPrompt: string) => {
 };
 
 export const startChat = () => {
-  const client = getGrokClient();
+  const client = getGeminiClient();
 
   return {
     sendMessage: async (userMessage: string) => {
